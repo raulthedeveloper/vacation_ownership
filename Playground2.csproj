@@ -6,6 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20220308213639_added_unit_FK_to_sales.cs" />
+    <Compile Remove="Migrations\20220308213639_added_unit_FK_to_sales.Designer.cs" />
+    <Compile Remove="Migrations\20220308213732_added_unit.cs" />
+    <Compile Remove="Migrations\20220308213732_added_unit.Designer.cs" />
+    <Compile Remove="Migrations\20220308214512_added sales.cs" />
+    <Compile Remove="Migrations\20220308214512_added sales.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.22">
       <PrivateAssets>all</PrivateAssets>

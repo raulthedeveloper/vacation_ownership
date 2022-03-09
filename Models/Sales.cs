@@ -11,14 +11,21 @@ namespace PlaygroundConsole1.Models
     public class Sales
     {
         public int Id { get; set; } 
+
         [ForeignKey("Employee")]
         public int EmployeeId { get; set; } 
         public Employee Employee { get; set; }
-        [ForeignKey("Customer")]
+
+
+        [ForeignKey("CustomerId")]
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
-        
-        public int ResortId { get; set; }
-        public Resort Resort { get; set; }
+
+
+
+
+        [ForeignKey("UnitId")]
+        public int UnitId { get; set; }
+        public Unit Unit { get; set; }
     }
 }

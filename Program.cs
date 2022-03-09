@@ -55,7 +55,7 @@ namespace Playground2
             switch (decision)
             {
                 case "1":
-                    SalesReport();
+                    GetData.ViewSalesReport();
                     Console.Clear();
                     
                     break;

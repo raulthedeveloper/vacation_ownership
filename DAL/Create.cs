@@ -35,7 +35,6 @@ namespace Playground2.DAL
 
             Console.Clear();
 
-            SalesSystem.Init();
 
             
 
@@ -58,8 +57,7 @@ namespace Playground2.DAL
                 string Location = Console.ReadLine();
 
 
-                Console.WriteLine("Enter Price");
-                string Price = Console.ReadLine();
+                
 
                 Resort resort = new Resort
                 {
@@ -137,12 +135,15 @@ namespace Playground2.DAL
             
 
             Console.WriteLine("Do you want to add more units? [yes] [no]");
-            if(Console.ReadLine() == "yes")
+
+            string addMore = Console.ReadLine();
+
+            if(addMore == "yes")
             {
                 Console.Clear();
                 AddUnits();
             }
-            else if(Console.ReadLine() == "no")
+            else if(addMore == "no")
             {
                 Console.Clear();
                 SalesSystem.Init();
@@ -157,28 +158,51 @@ namespace Playground2.DAL
         public void AddSale()
         {
             // Show All Employees in console with ID
-            getdata.ViewCustomers();
-            
+            Console.WriteLine("Do you want to create a new Customer? [yes] [press enter with no input for no]");
 
-            Console.WriteLine("Employee ID");
+            if(Console.ReadLine() == "yes")
+            AddCustomer();
+
+            getdata.ViewEmployees();
+            Console.WriteLine("Enter Employee ID");
             string EmployeeId = Console.ReadLine();
 
             Console.Clear();
 
-            getdata.ViewEmployees();
 
+            getdata.ViewCustomers();
             // Show All Customers in Console with ID
-            Console.WriteLine("Customer ID");
+            Console.WriteLine("Enter Customer ID");
             string CustomerId = Console.ReadLine();
+
+            Console.Clear();
+            getdata.ViewResortsList();
+
+            // Get Unit Id
+            // Show resort and then unit
+
+            Console.WriteLine("Enter Unit ID");
+            string UnitId = Console.ReadLine();
 
             Sales sales = new Sales
             {
                 EmployeeId = Int32.Parse(EmployeeId),
                 CustomerId = Int32.Parse(CustomerId),
+                UnitId = Int32.Parse(UnitId)
                 
             };
+            
+            _dbContext.Add(sales);
+            // Update Unit Purchased to True / Instead of False
+
+
+            _dbContext.SaveChanges();
 
             Console.WriteLine("Sale Was added");
+            System.Threading.Thread.Sleep(1000);
+            Console.Clear();
+            SalesSystem.Init();
+            
         }
 
         public void AddEmployee()
