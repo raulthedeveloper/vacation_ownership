@@ -11,10 +11,14 @@ namespace Playground2.DAL
         DbContext context = new BusinessContext();
         Get getData = new Get();
         SalesSystem SalesSystem = new SalesSystem();
+        Create create = new Create();
+
+        string deleteMessage = "Are you sure you want to delete [yes] [no]";
 
         public void DeleteCustomer()
         {
             //Show all customers
+            Console.Clear();
 
             getData.ViewCustomers();
 
@@ -23,7 +27,7 @@ namespace Playground2.DAL
             string customerId = Console.ReadLine();
 
 
-            Console.WriteLine("Are you sure you want to delete [yes] [no]");
+            Console.WriteLine(deleteMessage);
 
             string decision = Console.ReadLine();
 
@@ -52,6 +56,49 @@ namespace Playground2.DAL
                 DeleteCustomer();
             }
             
+        }
+
+        public void DeleteSale()
+        {
+            Console.Clear();
+
+            getData.ViewSalesReport();
+
+            Console.WriteLine("Which Sale Do you want to remove [Enter Sale Id]");
+            int Id = int.Parse(Console.ReadLine());
+
+            Console.WriteLine(deleteMessage);
+
+            string decision = Console.ReadLine();
+
+
+            if (decision == "yes")
+            {
+                Sales sale = new Sales
+                {
+                    Id = Id
+                };
+
+
+
+                context.Remove<Sales>(sale);
+
+                context.SaveChanges();
+
+                create.UpdateDatePurchaseStatus(false,Id);
+
+                SalesSystem.Init();
+
+            }
+            else if (decision == "no")
+            {
+                SalesSystem.Init();
+            }
+            else
+            {
+                DeleteSale();
+            }
+
         }
 
     }

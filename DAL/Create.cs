@@ -11,14 +11,12 @@ namespace Playground2.DAL
     
     public class Create
     {
-        private DbContext _dbContext;
+        DbContext _dbContext = new BusinessContext();
+
         SalesSystem SalesSystem = new SalesSystem();
         Get getdata = new Get();
 
-       public Create(DbContext context)
-        {
-            _dbContext = context;
-        }
+       
         public void AddCustomer()
         {
            
@@ -119,7 +117,7 @@ namespace Playground2.DAL
             {
                 for (int i = 0; i < RoomCount; i++)
                 {
-                    Unit unit = new Unit { ResortId = ResortId, Name = UnitName, Price = Price };
+                    Unit unit = new Unit { ResortId = ResortId, Name = UnitName + "-" + i, Price = Price };
 
                     _dbContext.Add(unit);
                     _dbContext.SaveChanges();
@@ -158,51 +156,128 @@ namespace Playground2.DAL
         public void AddSale()
         {
             // Show All Employees in console with ID
-            Console.WriteLine("Do you want to create a new Customer? [yes] [press enter with no input for no]");
+            Console.WriteLine("Existing Customer? [yes] [no] [back]");
 
-            if(Console.ReadLine() == "yes")
-            AddCustomer();
+            string decision = Console.ReadLine();
 
-            getdata.ViewEmployees();
-            Console.WriteLine("Enter Employee ID");
-            string EmployeeId = Console.ReadLine();
+            if (decision == "no")
+            {
+                AddCustomer();
+                Sale(false);
+            }
+
+            else if (decision == "yes")
+            {
+                Sale(true);   
+            }
+            else if (decision == "back")
+            {
+                SalesSystem.Init();
+            }
+            else
+            {
+                AddSale();
+            }
+            
+
+            
+            
+        }
+
+        private void Sale(bool existingCustomer)
+        {
+            
 
             Console.Clear();
 
 
-            getdata.ViewCustomers();
-            // Show All Customers in Console with ID
-            Console.WriteLine("Enter Customer ID");
-            string CustomerId = Console.ReadLine();
+            
+
+            string CustomerId = "";
+
+            if (existingCustomer)
+            {
+                getdata.ViewCustomers();
+                Console.WriteLine("Enter Customer ID");
+               
+                // Show All Customers in Console with ID
+                CustomerId = Console.ReadLine();
+                
+            }
+            else
+            {
+                // Get Id from newly created customer
+                // use find lamda to get id and then assign it
+                using(var db = new BusinessContext())
+                {
+                   CustomerId = db.Customers.OrderByDescending(e => e.Id).Select(r => r.Id).First().ToString();
+                    Console.WriteLine(CustomerId);
+
+                }
+                
+
+            }
+
+            Console.Clear();
+            getdata.ViewEmployees();
+            Console.WriteLine("Enter Employee ID");
+            int EmployeeId = Int32.Parse(Console.ReadLine());
 
             Console.Clear();
             getdata.ViewResortsList();
 
-            // Get Unit Id
-            // Show resort and then unit
+           
 
             Console.WriteLine("Enter Unit ID");
-            string UnitId = Console.ReadLine();
+
+
+            int UnitId = Int32.Parse(Console.ReadLine());
+
 
             Sales sales = new Sales
             {
-                EmployeeId = Int32.Parse(EmployeeId),
+                EmployeeId = EmployeeId,
                 CustomerId = Int32.Parse(CustomerId),
-                UnitId = Int32.Parse(UnitId)
-                
+                UnitId = UnitId
+
             };
-            
+
             _dbContext.Add(sales);
             // Update Unit Purchased to True / Instead of False
 
 
             _dbContext.SaveChanges();
 
+            UpdateDatePurchaseStatus(true, UnitId);
+
             Console.WriteLine("Sale Was added");
             System.Threading.Thread.Sleep(1000);
             Console.Clear();
             SalesSystem.Init();
-            
+        }
+
+        public void UpdateDatePurchaseStatus(bool purchased,int id)
+        {
+
+
+            using (var db = new BusinessContext())
+            {
+                var selectedUnit = db.Unit.Where(u => u.Id == id).FirstOrDefault();
+                switch (purchased)
+                {
+                    case true:  
+                        selectedUnit.Purchased = true;
+                        db.SaveChanges();
+                        break;
+                    case false:
+                        selectedUnit.Purchased = false;
+                        db.SaveChanges();
+                        break;
+                    default:
+                        
+                }
+            }
+           
         }
 
         public void AddEmployee()

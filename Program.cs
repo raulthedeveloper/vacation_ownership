@@ -10,19 +10,10 @@ namespace Playground2
     public class Program
     {
         DeleteData deleteData = new DeleteData();
+        
         static void Main(string[] args)
         {
-            //string firstName = Console.ReadLine();
-
-            //IEnumerable<Customer> numQuery1 =
-            //from customer in data.customers() where customer.FirstName == firstName select customer;
-
-            //IEnumerable<Customer> numQuery1 = data.customers().Where(x => x.FirstName == firstName);
-
-            //foreach (Customer i in numQuery1)
-            //{
-            //    Console.Write(i.LastName);
-            //}
+            
 
             SalesSystem salesSystem = new SalesSystem();
 
@@ -34,61 +25,56 @@ namespace Playground2
     {
         private readonly SeedData data = new SeedData();
         public DbContext context = new BusinessContext();
-       
+        private string exitMessage = "Press [Enter] when finished";
 
         public void Init()
         {
-            Get GetData = new Get();
 
         Console.WriteLine("What would you like to do? \n" +
-            "[1.View Sales Report] \n" +
-            "[2.View Employee Sales] \n" +
-            "[3.View All Employees] \n" +
-            "[4.View All Customer \n" +
-            "[5.View All Resorts] \n" +
-            "[6.Add New Data] \n" +
-            "[7.Delete Data] \n" +
-            "[8.Exit Program]");
+            "[1.View Data] \n" +
+            "[2.Create Sale] \n" +
+            "[3.Add New Data] \n" +           
+            "[4.Delete Data] \n" +
+            "[4.Update Data \n" +
+            "[6.Exit Program]");
 
-            string decision = Console.ReadLine();
 
-            switch (decision)
+            switch (Console.ReadLine())
             {
+               
                 case "1":
-                    GetData.ViewSalesReport();
                     Console.Clear();
-                    
-                    break;
-                case "2":
-                    GetEmployeeStats();
+
+                    ViewData();
                     Console.Clear();
                    
                     break;
+                case "2":
+                    Console.Clear();
+
+                    AddSale();
+                    Console.Clear();
+                    Init();
+
+                    break;
+
                 case "3":
-                    ViewEmployees();
+                    Console.Clear();
 
-                    break;
-                case "4":
-                    ViewCustomers();
-
-                    break;
-                case "5":
-                    ViewResorts();
-                    break;
-                case "6":
                     AddNewData();
                     Console.Clear();
                    
                     break;
-                case "7":
+                case "4":
                     Delete();
                     Console.Clear();
                     Init();
                     break;
-                case "8":
+                case "5":
                     Console.WriteLine("Good Bye...");
                     System.Threading.Thread.Sleep(2000);
                     break;
+
                 default:
                     Console.Clear();
                     Init();
@@ -96,40 +82,86 @@ namespace Playground2
             }
         }
 
+
+        private void ViewData()
+        {
+            Get GetData = new Get();
+
+            Console.WriteLine("What would you like to do? \n" +
+            "[1.View Sales Report] \n" +
+            "[2.View All Customers] \n" +
+            "[3.View All Employees] \n" +
+            "[4.View All Resorts] \n" +
+            "[5.Back To Main Menu]");
+
+            switch (Console.ReadLine())
+            {
+                case "1":
+                    
+                    GetData.ViewSalesReport();
+                    Console.Clear();
+                        ViewData();
+
+                    break;
+                case "2":
+                    ViewCustomers();
+                    Console.Clear();
+                    ViewData();
+
+                    break;
+                case "3":
+                    ViewEmployees();
+                    Console.Clear();
+                    ViewData();
+                    break;
+               
+                case "4":
+                    ViewResorts();
+                    Console.Clear();
+                    ViewData();
+                    break;
+               
+                case "5":
+                    Console.Clear();
+                    ViewData();
+                    break;
+                default:
+                    Console.Clear();
+                    ViewData();
+                    break;
+            }
+        }
+
+        private void UpdateData()
+        {
+            //Will be used to update the data
+            Console.WriteLine("You are updating the data");
+        }
+
+        private void AddSale()
+        {
+            Create create = new Create();
+            create.AddSale();
+        }
+
         private void ViewEmployees()
         {
             Get GetData = new Get();
             GetData.ViewEmployees();
-            Console.WriteLine("Please type \"done\" when finished view");
+            Console.WriteLine(exitMessage);
 
-            if (Console.ReadLine() == "done")
-            {
-                Console.Clear();
-                Init();
-            }
-            else
-            {
-                Console.Clear();
-                ViewEmployees();
-            }
+            Console.ReadLine();
+            
         }
 
         private void ViewResorts()
         {
             Get GetData = new Get();
             GetData.ViewResorts();
-            Console.WriteLine("Please type \"done\" when finished view");
+            Console.WriteLine(exitMessage);
 
-            if (Console.ReadLine() == "done")
-            {
-                Console.Clear();
-                Init();
-            }
-            else
-            {
-                Console.Clear();
-                ViewResorts();
-            }
+            Console.ReadLine();
+           
         }
         
         private void ViewCustomers()
@@ -137,29 +169,22 @@ namespace Playground2
             Get GetData = new Get();
 
             GetData.ViewCustomers();
-            Console.WriteLine("Please type \"done\" when finished view");
+            Console.WriteLine(exitMessage);
 
-            if (Console.ReadLine() == "done")
-            {
-                Console.Clear();
-                Init();
-            }
-            else
-            {
-                ViewCustomers();
-            }
+            Console.ReadLine();
+            
         }
 
         private void AddNewData()
         {
             Console.Clear();
 
-            Create addData = new Create(context);
+            Create addData = new Create();
 
             Console.WriteLine($"[1.Add New Customer] \n" +
-                $"[2.Add New Sale] \n" +
-                $"[3.Add New Employee] \n" +
-                $"[4.Add New Resort]");
+                $"[2.Add New Employee] \n" +
+                $"[3.Add New Resort] \n" +
+                $"[4.Back To Main Menu]");
 
             string decision = Console.ReadLine();
 
@@ -167,18 +192,22 @@ namespace Playground2
             {
                 case "1":
                     addData.AddCustomer();
-                    Init();
+                    Console.Clear();
+                    AddNewData();
                     break;
                 case "2":
-                   addData.AddSale();
-                    Init();
+                    addData.AddEmployee();
+                    Console.Clear();
+                    AddNewData();
                     break;
                 case "3":
-                    addData.AddEmployee();
-                    Init();
+                    addData.AddResort();
+                    Console.Clear();
+                    AddNewData();
                     break;
                 case "4":
-                    addData.AddResort();
+                    
+                    Console.Clear();
                     Init();
                     break;
                 default:
@@ -210,6 +239,8 @@ namespace Playground2
             }
         }
 
+       
+
         private void Delete()
         {
             var deleteData = new DeleteData();
@@ -223,10 +254,12 @@ namespace Playground2
             {
                 case "1":
                     deleteData.DeleteCustomer();
+                    Console.Clear();
                     break;
-                //case "2":
-                //    addData.AddSale();
-                //    break;
+                case "2":
+                    deleteData.DeleteSale();
+                    Console.Clear();
+                    break;
                 //case "3":
                 //    addData.AddEmployee();
                 //    break;
@@ -237,21 +270,6 @@ namespace Playground2
 
        
 
-        private void SalesReport()
-        {
-            var innerJoinQuery =
-            from sales in data.sales()
-            join customer in data.customers() on sales.CustomerId equals customer.Id
-            join employee in data.employees() on sales.EmployeeId equals employee.Id
-            select new {  customer = $"{customer.FirstName}  {customer.LastName}", SalesRep = $"{employee.FirstName}  {employee.LastName}" };
-
-            foreach (var salesReport in innerJoinQuery)
-            {
-                Console.WriteLine($"Customer: {salesReport.customer} \nSales Rep: {salesReport.SalesRep}");
-                Console.WriteLine("--------------------------------");
-
-
-            }
-        }
+        
     }
 }

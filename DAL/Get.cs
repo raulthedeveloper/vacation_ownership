@@ -225,6 +225,7 @@ namespace Playground2.DAL
                     join resort in db.Resort on unit.ResortId equals resort.Id
                     select new
                     {
+                        SalesId = sale.Id,
                         EmployeeId = employee.Id,
                         EmployeeName = employee.FirstName + " " + employee.LastName,
                         ResortName = resort.Name,
@@ -239,7 +240,9 @@ namespace Playground2.DAL
 
                 foreach (var report in salesReport)
                 {
-                    Console.WriteLine($"Employee Id:{report.EmployeeId} \n" +
+                    Console.WriteLine(
+                        $"Sale Id:{report.SalesId} \n" +
+                        $"Employee Id:{report.EmployeeId} \n" +                      
                         $"Name: {report.EmployeeName} \n" +
                         $"Resort Name: {report.ResortName} \n" +
                         $"Resort Location: {report.ResortLocation} \n" +
@@ -250,20 +253,12 @@ namespace Playground2.DAL
                     Console.WriteLine("-----------------------------");
                 }
 
-                Console.WriteLine("Enter [done] to return back to menu");
-                if (Console.ReadLine() == "done")
-                {
-                    Console.Clear();
-                    SalesSystem.Init();
-                }
-                else
-                {
-                    ViewSalesReport();
-                }
-
-                
+                Console.WriteLine("Press [Enter] to continue");
+                Console.ReadLine();
 
             }
         }
+
+        
     }
 }
